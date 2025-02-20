@@ -23,8 +23,10 @@ public class IntegrationResource {
     @Path("/receipts")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response integration(UnifyRequest unifyRequest,String url) {
+    public Response integration() {
         try {
+            String url = "URL";
+            UnifyRequest unifyRequest = new UnifyRequest();
             integrationService.sendToUnify(unifyRequest,url);
             Map<String, String> response = new HashMap<>();
             response.put("status", "Connection successful");
