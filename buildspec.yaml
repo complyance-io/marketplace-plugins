@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto21
+    commands:
+      - echo Installing Maven...
+      - yum install -y maven
+
+  build:
+    commands:
+      - mvn compile dependency:copy-dependencies -DincludeScope=runtime -U
+      - mvn clean package
+      - echo Jar file built successfully.
+      - echo "S3 bucket is $S3_BUCKET"
+      - echo "S3 bucket is $JAR_FILE_NAME"
+      - aws s3 cp target/*.jar "s3://$S3_BUCKET/$JAR_FILE_NAME"
+      - aws ssm send-command --instance-ids "$INSTANCE_ID" --document-name "AWS-RunShellScript" --parameters '{"commands":["chmod +x /home/ec2-user/deploy.sh","/home/ec2-user/deploy.sh"],"executionTimeout":["3600"]}' --comment "Running deploy.sh script on EC2 instance" --timeout-seconds 600
