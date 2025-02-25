@@ -4,7 +4,7 @@ phases:
 
   build:
     commands:
-      - ./mvnw package
+      - mvn clean package -Dquarkus.package.uber-jar=true
       - echo Jar file built successfully.
       - echo "S3 bucket is $S3_BUCKET"
       - echo "S3 bucket is $JAR_FILE_NAME"
